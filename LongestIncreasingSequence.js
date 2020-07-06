@@ -1,23 +1,33 @@
-module.exports = (arr) => {
-  const sequences = [];
-  arr.forEach((sequenceNumber) => {
-    let existingSequence = false;
-    sequences.forEach((sequence) => {
-      if(sequence.previousNumber < sequenceNumber){
-        sequence.previousNumber = sequenceNumber
-        sequence.length++;
-        existingSequence = true;
-      }
-    })
+const getBestSequenceForSubset = (arr, index, previousSequences) => {
+  let subsequenceForIndex = [];
+  let subsequenceEndValue = arr[index];
 
+  let subArray = arr.slice(0, index);
+  subArray.forEach((currentValue, subIndex) => {
+    let bestSequenceAtSubIndex = previousSequences[subIndex];
 
-    if(!existingSequence){
-      sequences.push({
-        length: 1,
-        previousNumber: sequenceNumber,
-      });
+    const isValidSequence = currentValue < subsequenceEndValue;
+    const previousSubSequenceIsLonger = bestSequenceAtSubIndex.length > subsequenceForIndex.length;
+
+    if(isValidSequence && previousSubSequenceIsLonger) {
+      subsequenceForIndex = bestSequenceAtSubIndex;
     }
   });
 
-  return Object.values(sequences).sort((a, b) =>  b.length - a.length)[0].length;
+  return subsequenceForIndex;
 }
+
+module.exports = (arr) => {
+  let longestPartialSubsequences = [];
+  
+
+  arr.forEach((subSequenceEndValue, index) => {
+    const bestSequenceBeforeIndex = getBestSequenceForSubset(arr, index, longestPartialSubsequences);
+
+    longestPartialSubsequences[index] = [...bestSequenceBeforeIndex];
+    longestPartialSubsequences[index].push(subSequenceEndValue);
+  });
+
+  return longestPartialSubsequences.sort((a, b) => b.length - a.length)[0].length;
+
+};

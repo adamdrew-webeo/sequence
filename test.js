@@ -21,4 +21,9 @@ describe('LongestIncreasingSequence', () => {
     const result = LongestIncreasingSequence([10, 22, 9, 33, 21, 50, 41, 60, 22, 68, 90]);
     expect(result).equals(7)
   });
+
+  it('should work with a gnarly sequence that probably requires backtracking', () => {
+    const result = LongestIncreasingSequence([19, 12, 4, 6, 100, 2, 56, 34, 79]);
+    expect(result).equals(4)
+  });
 });
